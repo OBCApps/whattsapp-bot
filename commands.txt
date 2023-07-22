@@ -1,0 +1,11 @@
+https://4b75-38-25-22-78.ngrok.io
+
+
+python -m venv venv
+source venv/bin/activate   | venv\Scripts\activate
+pip install twilio
+pip install fastapi uvicorn
+pip install python-multipart
+pip install python-dotenv
+
+uvicorn main:app --host 0.0.0.0 --port 8000
