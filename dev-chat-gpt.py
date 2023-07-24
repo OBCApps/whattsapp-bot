@@ -1,6 +1,6 @@
 import openai
 #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
-openai.api_key = "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"
+openai.api_key = "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"
 
 
 def obtener_respuesta(pregunta):
