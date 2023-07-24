@@ -18,7 +18,7 @@ users_info = {}
 
 def obtener_respuesta(pregunta):
     completar = openai.Completion.create(
-        engine = "text-davinci-003", 
+        engine = "text-davinci-002", 
         prompt = pregunta, 
         max_tokens = 150, 
         temperature = 0, 
@@ -27,9 +27,9 @@ def obtener_respuesta(pregunta):
     return respuesta
 
 def get_instruction(message):
-    prompt = f"Clasifica este mensaje: {message} si se relaciona a las siguientes categorias Buscar un producto[Un usuario quiere saber si el producto que desea existe y precios etc..],Saludo[Si el usuario esta escribiendo un mensaje de saludo], Buscar un producto detalle[el usuario da detalles acerca de lo qeu quiere buscar], Pagar[El usuario sabe acerca del producto por ello quiere realizar la compra del producto], Acepto pagar[El cliente menciono que comprara el producto y esta seguro que va a comprar],Envio de datos[El usuario esta enviando sus datos personales, por ejmplo nombre y numero, Pago realizado[El cliente esta afirmando que ah echo el deposito]]  " 
-    response = obtener_respuesta(prompt)
-    print("Clasificacion: ", response)
+    #prompt = f"Clasifica este mensaje: {message} si se relaciona a las siguientes categorias,  Buscar un producto [Un usuario quiere saber si el producto que desea existe y precios etc..] si se relaciona solo retorne Buscar un producto, Saludo[Si el usuario esta escribiendo un mensaje de saludo] si se relaciona solo retorne Saludo, Buscar un producto detalle[el usuario da detalles acerca de lo qeu quiere buscar] si se relaciona solo retorne Buscar un producto detalle, Pagar[El usuario sabe acerca del producto por ello quiere realizar la compra del producto] si se relaciona solo retorne Pagar, Acepto pagar[El cliente menciono que comprara el producto y esta seguro que va a comprar] si se relaciona solo retorne Acepto Pagar,Envio de datos[El usuario esta enviando sus datos personales, por ejmplo nombre y numero si se relaciona solo retorna Envio de datos, Pago realizado[El cliente esta afirmando que ah echo el deposito] si se relaciona solo retorna Pago realizado]  " 
+    prompt = f"Clasifica este mensaje: {message} si se relaciona a las siguientes categorias, Categoria 1: si se relaciona a buscar un producto, solo dame como respuesta Buscar un producto ; Categoria 2: Si se relaciona a que se esta haciendo un saludo, solo dame como respuesta Saludo . Por ejemplo, user: Hola , respuesta:Saludo ; user:quiero un producto, respuesta: Buscar un producto"
+    response = obtener_respuesta(prompt)    
     return response
 
 def sendMessagge( message , number):    
@@ -61,6 +61,7 @@ async def whattsapp_bot(request: Request):
     if user['state'] == 'initial':
         # Bienvenida, busqueda , solicitud de datos
         objetivo = get_instruction(msg_user)
+        print(f"objetivo {objetivo} 1")
         if objetivo == "Buscar un producto":
             user['state'] = 'search_product'
             prompt = "Solicita los detalles para la busqueda del producto"
@@ -72,7 +73,7 @@ async def whattsapp_bot(request: Request):
             response = obtener_respuesta(prompt)
             sendMessagge(response , user_number)
         else:
-            prompt = "No entendiste lo que el usuario dijo, por ello le mencionas que repita las frases"
+            prompt = "No entendiste lo que el usuario dijo, por ello le mencionas que repita las frases "
             response = obtener_respuesta(prompt)
             sendMessagge(response , user_number)
 
